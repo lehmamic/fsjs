@@ -26,3 +26,9 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+
+# IDE files
+.idea
+
+# bower files
+public/lib
