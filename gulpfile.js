@@ -7,36 +7,41 @@ var usemin = require('gulp-usemin');
 var uglify = require('gulp-uglify');
 var minifyHtml = require('gulp-minify-html');
 var minifyCss = require('gulp-minify-css');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant');
 var rev = require('gulp-rev');
 var clean = require('gulp-clean');
 var using = require('gulp-using');
+var debug = require('gulp-debug');
+var path = require('path');
 
 var paths = {
   index: './public/index.html',
+  html: './public/**/*.html',
   scripts: './public/app/**/*.js',
   assets: './public/assets/**/*.css',
+  images: '/public/images/**/*.{png,jpg,jpeg}',
   bower: './bower.json',
   app: './public',
   dist: './dist'
 };
 
 gulp.task('inject', function () {
-    //var target = gulp.src('./public/index.html');
-    // It's not necessary to read the files (will speed up things), we're only after their paths:
-    //var sources = gulp.src(['./src/**/*.js', './src/**/*.css'], {read: false});
-
     var components = gulp.src(bowerFiles(), {read: false})
-        .pipe(using());
+        .pipe(angularFilesort())
+        .pipe(debug({verbose: false}));
 
 	var scripts = gulp.src(paths.scripts, {read: false})
-        .pipe(angularFilesort());
+        .pipe(angularFilesort())
+        .pipe(debug({verbose: false}));
 		
-    var assets = gulp.src(paths.assets, {read: false});
+    var assets = gulp.src(paths.assets, {read: false})
+        .pipe(debug({verbose: false}));
 
     return gulp.src(paths.index)
-       // .pipe(using())
-        .pipe(inject(components), {name: 'bower'})
-        .pipe(inject(es.merge(scripts, assets)))
+        .pipe(debug({verbose: false}))
+        .pipe(inject(components, {name: 'bower', relative: true}))
+        .pipe(inject(es.merge(scripts, assets), {relative: true}))
         .pipe(gulp.dest(paths.app));
 });
 
@@ -50,6 +55,16 @@ gulp.task('usemin', function() {
     .pipe(gulp.dest(paths.dist));
 });
 
+gulp.task('imagemin', function() {
+    return gulp.src('paths.images')
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest(path.join(paths.dist, 'images')));
+});
+
 gulp.task('watch', function() {
   gulp.watch([paths.scripts, paths.assets, paths.bower], ['inject']);
 });
@@ -59,7 +74,11 @@ gulp.task('clean', function() {
       .pipe(clean());
 });
 
-gulp.task('build', ['clean', 'inject', 'usemin']);
+gulp.task('copy', function() {
+
+});
+
+gulp.task('build', ['clean', 'inject', 'usemin', 'imagemin', 'copy']);
 
 gulp.task('default', ['build'], function() {
     // place code for your default task here
