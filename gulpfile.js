@@ -46,7 +46,7 @@ gulp.task('inject', function () {
 });
 
 gulp.task('usemin', function() {
-  return gulp.src(paths.index)
+  return gulp.src(paths.html)
     .pipe(usemin({
       css: [minifyCss(), 'concat'],
       html: [minifyHtml({empty: true})],
@@ -56,7 +56,7 @@ gulp.task('usemin', function() {
 });
 
 gulp.task('imagemin', function() {
-    return gulp.src('paths.images')
+    return gulp.src(paths.images)
         .pipe(imagemin({
             progressive: true,
             svgoPlugins: [{removeViewBox: false}],
