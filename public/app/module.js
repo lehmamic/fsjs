@@ -12,5 +12,5 @@
 
         // app
         'fullStackJS.config',
-        'fullStackJS.login']);
+        'fullStackJS.authentication']);
 })();

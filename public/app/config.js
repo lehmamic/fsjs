@@ -8,7 +8,7 @@
         function($routeProvider) {
             $routeProvider.
                 when('/login', {
-                    templateUrl: 'app/login/login.html',
+                    templateUrl: 'app/authentication/login/login.html',
                     controller: 'LoginCtrl'
                 }).
                 otherwise({

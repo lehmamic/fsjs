@@ -15,7 +15,7 @@ var users = require('./app/routes/users');
 var db = mongoose.connect(config.db);
 
 var models_path = path.join(config.root, '/app/models');
-bootstrap.walkRoutes(models_path)
+bootstrap.walkModels(models_path)
 
 var app = express();
 
