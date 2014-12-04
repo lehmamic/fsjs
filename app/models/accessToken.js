@@ -24,8 +24,8 @@
         var now = moment();
 
         this.token = utils.uid(config.bearerTokenLength);
-        this.createdAt = now;
-        this.expiresOn = now.add(config.bearerTokenLifeTime.totalSeconds(), 's').utc();
+        this.createdAt = now.clone().utc();
+        this.expiresOn = now.clone().add(config.bearerTokenLifeTime.totalSeconds(), 's').utc();
 
         next();
     });
