@@ -18,7 +18,7 @@
         //   with a user object.  In the real world, this would query a database;
         //   however, in this example we are using a baked-in set of users.
         passport.use(new LocalStrategy(function(username, password, done) {
-            User.findOne({ username: username }, function(err, user) {
+            User.findOne({ userName: username }, function(err, user) {
                 if (err) {
                     return done(err);
                 }
@@ -41,7 +41,7 @@
                 var token = utils.uid(config.bearerTokenLength)
                 var responseData = {
                     access_token: token,
-                    user_name: 'asdf'
+                    user_name: req.user.userName
                 };
 
                 res.send(responseData);

@@ -17,6 +17,7 @@ var db = mongoose.connect(config.db);
 
 var models_path = path.join(config.root, '/app/models');
 bootstrap.walkModels(models_path)
+bootstrap.seed();
 
 // Bootstrap express config
 var app = express();

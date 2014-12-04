@@ -34,6 +34,7 @@
         passwordHash: String,
         salt: String,
         access_token: String,
+        roles: [String],
         logins: [LoginInfoSchema]
     });
 

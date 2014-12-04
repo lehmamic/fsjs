@@ -4,7 +4,7 @@
 (function () {
     'use strict';
 
-    var TimeSpan = require('timespan');
+    var TimeSpan = require('timespan').TimeSpan;
 
     module.exports = {
         db: "mongodb://localhost/gallery_test",

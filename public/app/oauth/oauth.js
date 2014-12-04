@@ -36,7 +36,7 @@
                 }
             };
 
-            var xsrf = $.param({ username: username, password: password, grant_type: "password" });
+            var xsrf = $.param({ grant_type: "password", username: username, password: password });
 
             this.$http.post(this.tokenEndpoint, xsrf, httpConfig)
                 .success(function (data) {

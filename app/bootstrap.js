@@ -5,6 +5,7 @@
     'use strict';
 
     var fs = require('fs');
+    var mongoose = require('mongoose');
 
     var walkModels = function(path) {
         fs.readdirSync(path).forEach(function(file) {
@@ -40,5 +41,15 @@
         });
     };
     exports.walkRoutes = walkRoutes;
+
+    exports.seed = function() {
+
+        var User = mongoose.model('User');
+        User.find({}).exec(function (err, collection) {
+            if (collection.length === 0) {
+                User.create({ userName: 'admin', password: '12345' });
+            }
+        });
+    };
 
 })();

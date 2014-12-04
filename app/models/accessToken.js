@@ -12,7 +12,7 @@
      */
     var AccessTokenSchema = new Schema({
         token: String,
-        username: String,
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', index: true },
         expiresOn: Date,
         createdAt: { type: Date, expires: config.bearerTokenLifeTime.totalSeconds() }
     });
