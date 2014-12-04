@@ -1,5 +1,6 @@
 var express = require('express');
 var mongoose = require('mongoose');
+var passport = require('passport');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -17,6 +18,7 @@ var db = mongoose.connect(config.db);
 var models_path = path.join(config.root, '/app/models');
 bootstrap.walkModels(models_path)
 
+// Bootstrap express config
 var app = express();
 
 // view engine setup
@@ -30,6 +32,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(config.root, 'public')));
+
+// Bootstrap passport config
+require('./config/passport')(app, passport);
 
 //app.use('/', routes);
 //app.use('/users', users);

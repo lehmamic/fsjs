@@ -7,6 +7,9 @@
 (function () {
     'use strict';
 
+
+    // new Schema({ createdAt: { type: Date, expires: 60*60*24 }});
+
     /**
      * Module dependencies.
      */
