@@ -8,11 +8,9 @@
     var User = mongoose.model('User');
     var LocalStrategy = require('passport-local').Strategy;
     var config = require('./config');
-    var oauth2orize = require('oauth2orize');
+    var utils = require('../shared/utils');
 
     module.exports = function(app, passport) {
-
-        var server = oauth2orize.createServer();
 
         // Use the LocalStrategy within Passport.
         //   Strategies in passport require a `verify` function, which accept
@@ -25,10 +23,10 @@
                     return done(err);
                 }
                 if (!user) {
-                    return done(null, false, { message: 'User not found.' });
+                    return done(null, false, { error_description: 'User not found.' });
                 }
                 if (!user.authenticate(password)) {
-                    return done(null, false, { message: 'Invalid password.' });
+                    return done(null, false, { error_description: 'Invalid password.' });
                 }
 
                 return done(null, user);
@@ -38,7 +36,15 @@
 
         app.post('/token',
             passport.authenticate(['local'], { session: false }),
-            server.token(),
-            server.errorHandler());
+            function(req, res) {
+
+                var token = utils.uid(config.bearerTokenLength)
+                var responseData = {
+                    access_token: token,
+                    user_name: 'asdf'
+                };
+
+                res.send(responseData);
+            });
     };
 })();

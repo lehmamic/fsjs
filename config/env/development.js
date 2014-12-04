@@ -4,7 +4,8 @@
 (function () {
     'use strict';
     module.exports = {
-        db: "mongodb://localhost/gallery_dev"
+        db: "mongodb://localhost/gallery_dev",
+        bearerTokenLength: 256
         //facebook: {
         //    clientID: "APP_ID",
         //    clientSecret: "APP_SECRET",
