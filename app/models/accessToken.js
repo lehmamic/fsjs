@@ -5,13 +5,17 @@
     'use strict';
     var mongoose = require('mongoose');
     var Schema = mongoose.Schema;
+    var config = require('../../config/config');
 
     /**
      * Login Info Schema
      */
     var AccessTokenSchema = new Schema({
-        token: 'string',
-        expiresOn: 'string',
-        createdAt: { type: Date, expires: 60*60*24 }
+        token: String,
+        username: String,
+        expiresOn: Date,
+        createdAt: { type: Date, expires: config.bearerTokenLifeTime.totalSeconds() }
     });
+
+    mongoose.model('AccessToken', AccessTokenSchema);
 })();

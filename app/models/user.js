@@ -18,8 +18,8 @@
      * Login Info Schema
      */
     var LoginInfoSchema = new Schema({
-        provider: 'string',
-        providerKey: 'string'
+        provider: String,
+        providerKey: String
     });
 
     /**

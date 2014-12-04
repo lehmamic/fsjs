@@ -3,9 +3,13 @@
  */
 (function () {
     'use strict';
+
+    var TimeSpan = require('timespan');
+
     module.exports = {
         db: "mongodb://localhost/gallery_test",
-        bearerTokenLength: 256
+        bearerTokenLength: 256,
+        bearerTokenLifeTime: new TimeSpan(0, 0, 0, 24, 0)
         //facebook: {
         //    clientID: "APP_ID",
         //    clientSecret: "APP_SECRET",
