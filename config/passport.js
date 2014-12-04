@@ -6,6 +6,7 @@
 
     var mongoose = require('mongoose');
     var User = mongoose.model('User');
+    var AccessToken = mongoose.model('AccessToken');
     var LocalStrategy = require('passport-local').Strategy;
     var config = require('./config');
     var utils = require('../shared/utils');
@@ -38,9 +39,11 @@
             passport.authenticate(['local'], { session: false }),
             function(req, res) {
 
-                var token = utils.uid(config.bearerTokenLength)
+                var token = AccessToken.findOrCreate({ user: req.user._id })
+                // var token = utils.uid(config.bearerTokenLength)
                 var responseData = {
-                    access_token: token,
+                    access_token: token.token,
+                    expires: token.expiresOn,
                     user_name: req.user.userName
                 };
 

@@ -3,9 +3,11 @@
  */
 (function () {
     'use strict';
+    var moment = require('moment');
     var mongoose = require('mongoose');
     var Schema = mongoose.Schema;
     var config = require('../../config/config');
+    var utils = require('../../shared/utils');
 
     /**
      * Login Info Schema
@@ -17,5 +19,33 @@
         createdAt: { type: Date, expires: config.bearerTokenLifeTime.totalSeconds() }
     });
 
-    mongoose.model('AccessToken', AccessTokenSchema);
+    AccessTokenSchema.pre('init', function (next) {
+
+        var now = moment();
+
+        this.token = utils.uid(config.bearerTokenLength);
+        this.createdAt = now;
+        this.expiresOn = now.add(config.bearerTokenLifeTime.totalSeconds(), 's').utc();
+
+        next();
+    });
+
+    AccessTokenSchema.statics.findOrCreate = function(filters, cb) {
+        AccessToken = this;
+        this.find(filters, function(err, results) {
+            if(results.length == 0) {
+                var newToken= new AccessToken();
+                newToken.user = filters.user;
+
+
+                newToken.save(function(err, doc) {
+                    cb(err, doc)
+                });
+            } else {
+                cb(err, results[0]);
+            }
+        });
+    };
+
+    var AcessToken = mongoose.model('AccessToken', AccessTokenSchema);
 })();
