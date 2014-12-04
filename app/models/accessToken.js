@@ -19,7 +19,7 @@
         createdAt: { type: Date, expires: config.bearerTokenLifeTime.totalSeconds() }
     });
 
-    AccessTokenSchema.pre('init', function (next) {
+    AccessTokenSchema.pre('save', function (next) {
 
         var now = moment();
 
@@ -31,7 +31,7 @@
     });
 
     AccessTokenSchema.statics.findOrCreate = function(filters, cb) {
-        AccessToken = this;
+        var AccessToken = this;
         this.find(filters, function(err, results) {
             if(results.length == 0) {
                 var newToken= new AccessToken();
@@ -47,5 +47,5 @@
         });
     };
 
-    var AcessToken = mongoose.model('AccessToken', AccessTokenSchema);
+    mongoose.model('AccessToken', AccessTokenSchema);
 })();

@@ -39,15 +39,23 @@
             passport.authenticate(['local'], { session: false }),
             function(req, res) {
 
-                var token = AccessToken.findOrCreate({ user: req.user._id })
-                // var token = utils.uid(config.bearerTokenLength)
-                var responseData = {
-                    access_token: token.token,
-                    expires: token.expiresOn,
-                    user_name: req.user.userName
-                };
+                AccessToken.findOrCreate({ user: req.user._id }, function (err, result) {
 
-                res.send(responseData);
+                    if(result) {
+                        var responseData = {
+                            access_token: result.token,
+                            expires: result.expiresOn,
+                            user_name: req.user.userName
+                        };
+
+                        res.send(responseData);
+                    } else {
+                        res.send(500);
+                    }
+
+                });
+                // var token = utils.uid(config.bearerTokenLength)
+
             });
     };
 })();
