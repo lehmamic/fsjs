@@ -44,7 +44,7 @@
                     if(result) {
                         var responseData = {
                             access_token: result.token,
-                            expires: result.expiresOn,
+                            expires_in: result.expiresIn,
                             user_name: req.user.userName
                         };
 
@@ -54,8 +54,6 @@
                     }
 
                 });
-                // var token = utils.uid(config.bearerTokenLength)
-
-            });
+             });
     };
 })();

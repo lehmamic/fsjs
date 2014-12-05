@@ -4,6 +4,7 @@
 (function () {
     'use strict';
     var moment = require('moment');
+    var timespan = require('timespan');
     var mongoose = require('mongoose');
     var Schema = mongoose.Schema;
     var config = require('../../config/config');
@@ -24,8 +25,8 @@
         var now = moment();
 
         this.token = utils.uid(config.bearerTokenLength);
-        this.createdAt = now.clone().utc();
-        this.expiresOn = now.clone().add(config.bearerTokenLifeTime.totalSeconds(), 's').utc();
+        this.createdAt = now.clone().toDate()
+        this.expiresOn = now.clone().add(config.bearerTokenLifeTime.totalSeconds(), 's').toDate();
 
         next();
     });
@@ -46,6 +47,15 @@
             }
         });
     };
+
+    AccessTokenSchema.virtual('expiresIn').get(function () {
+        var now = moment().toDate();
+        var expiresOn = this.expiresOn;
+
+        var expiresIn = timespan.fromDates(now, expiresOn);
+
+        return Math.floor(expiresIn.totalSeconds());
+    });
 
     mongoose.model('AccessToken', AccessTokenSchema);
 })();
