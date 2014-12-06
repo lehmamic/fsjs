@@ -14,6 +14,7 @@ var clean = require('gulp-clean');
 var using = require('gulp-using');
 var debug = require('gulp-debug');
 var path = require('path');
+var mocha = require('gulp-mocha');
 
 var paths = {
   index: './public/index.html',
@@ -22,6 +23,7 @@ var paths = {
   assets: './public/assets/**/*.css',
   images: '/public/images/**/*.{png,jpg,jpeg}',
   bower: './bower.json',
+  nodetests: './test/unit/**/*.js',
   app: './public',
   dist: './dist'
 };
@@ -76,6 +78,11 @@ gulp.task('clean', function() {
 
 gulp.task('copy', function() {
 
+});
+
+gulp.task('test', function() {
+    return gulp.src(paths.nodetests, {read: false})
+        .pipe(mocha({reporter: 'spec'}));
 });
 
 gulp.task('build', ['clean', 'inject', 'usemin', 'imagemin', 'copy']);

@@ -47,7 +47,7 @@
         var User = mongoose.model('User');
         User.find({}).exec(function (err, collection) {
             if (collection.length === 0) {
-                User.create({ userName: 'admin', password: '12345' });
+                User.create({ userName: 'Admin', password: '12345' });
             }
         });
     };
