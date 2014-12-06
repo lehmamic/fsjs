@@ -20,13 +20,27 @@
     require('../../../config/express')(app);
     require('../../../config/passport')(app, passport)
 
+    require('../../../app/models/accessToken');
+    var AccessToken = mongoose.model('AccessToken');
+
+    require('../../../app/models/user');
+    var User = mongoose.model('User');
+
+    // test endpoint
+    app.get('/test',
+        passport.authenticate('bearer', { session: false }),
+        function(req, res){
+            res.send("authentication passed");
+        });
+
     describe("passport config", function() {
 
+        beforeEach(function(){
+            mockgoose.reset()
+            bootstrap.seed();
+        });
+
         describe("POST /token", function() {
-            beforeEach(function(){
-                mockgoose.reset()
-                bootstrap.seed();
-            });
 
             it("with valid user login returns a token", function(done) {
 
@@ -75,6 +89,40 @@
                     .end(function() { done (); });
 
             });
+        });
+
+        describe("calling a protected api", function() {
+            it("returns http 401 without authorization header", function(done) {
+                request(app)
+                    .get('/test')
+                    .set('Authorization', 'Bearer asdf')
+                    .expect(401)
+                    .end(function() { done(); });
+            });
+
+            it("returns http 401 with invalid token", function(done) {
+                request(app)
+                    .get('/test')
+                    .set('Authorization', 'Bearer asdf')
+                    .expect(401)
+                    .end(function() { done(); });
+            });
+
+            //it("executes api with valid token", function(done) {
+            //    User.findOne({ userName: 'Admin' }, function(err, doc) {
+            //        AccessToken.findOrCreate( { user: doc._id }, function(err, doc){
+            //
+            //            var authorizationHeader = 'Bearer ' + doc.token;
+            //
+            //            // act
+            //            request(app)
+            //                .get('/test')
+            //                .set('authorization', authorizationHeader)
+            //                .expect(200)
+            //                .end(function() { done(); });
+            //        });
+            //    });
+            //});
         });
     });
 })();

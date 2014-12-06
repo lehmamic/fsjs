@@ -8,6 +8,7 @@
     var User = mongoose.model('User');
     var AccessToken = mongoose.model('AccessToken');
     var LocalStrategy = require('passport-local').Strategy;
+    var BearerStrategy = require('passport-http-bearer').Strategy;
     var config = require('./config');
     var utils = require('../shared/utils');
 
@@ -35,6 +36,29 @@
             });
         }));
 
+        // Use the BearerStrategy within Passport.
+        //   Strategies in Passport require a `validate` function, which accept
+        //   credentials (in this case, a token), and invoke a callback with a user
+        //   object.
+        passport.use(
+            new BearerStrategy(function(token, done) {
+                AccessToken.findOne({ token: token })
+                .populate('_creator')
+                .exec(function (err, doc) {
+                        if(err) {
+                            return done(err)
+                        }
+                        if(!doc || !doc.user || !doc.user._id) {
+                            return done(null, false)
+                        }
+
+                        return done(null, doc.user, { scope: 'all' })
+                    });
+                }
+            )
+        );
+
+        // Token endpoint to retrieve a self issued access token.
         app.post('/token',
             passport.authenticate(['local'], { session: false }),
             function(req, res) {
@@ -43,6 +67,7 @@
 
                     if(result) {
                         var responseData = {
+                            token_type: 'Bearer',
                             access_token: result.token,
                             expires_in: result.expiresIn,
                             user_name: req.user.userName
