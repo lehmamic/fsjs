@@ -10,7 +10,7 @@ var minifyCss = require('gulp-minify-css');
 var imagemin = require('gulp-imagemin');
 var clean = require('gulp-clean');
 var debug = require('gulp-debug');
-var path = require('canonical-path');
+var path = require('path');
 var mocha = require('gulp-mocha');
 
 var paths = {
@@ -24,7 +24,9 @@ var paths = {
     },
     dist: './dist',
     bower: './bower.json',
-    nodetests: './test/unit/**/*.js'
+    tests: {
+        mocha: './test/unit/**/*.js'
+    }
 };
 
 gulp.task('inject', function () {
@@ -51,36 +53,32 @@ gulp.task('usemin', function() {
     .pipe(gulp.dest(paths.dist));
 });
 
-//gulp.task('imagemin', function() {
-//    return gulp.src(paths.images)
-//        .pipe(imagemin({
-//            progressive: true,
-//            svgoPlugins: [{removeViewBox: false}],
-//            use: [pngquant()]
-//        }))
-//        .pipe(gulp.dest(path.join(paths.dist, 'images')));
-//});
-//
+gulp.task('imagemin', function() {
+    return gulp.src(paths.app.images)
+        .pipe(imagemin({ progressive: true }))
+        .pipe(gulp.dest(path.join(paths.dist, 'images')));
+});
+
 //gulp.task('watch', function() {
 //  gulp.watch([paths.scripts, paths.assets, paths.bower], ['inject']);
 //});
-//
-//gulp.task('clean', function() {
-//  return gulp.src(paths.dist, {read: false})
-//      .pipe(clean());
-//});
-//
-//gulp.task('copy', function() {
-//
-//});
-//
-//gulp.task('test', function() {
-//    return gulp.src(paths.nodetests, {read: false})
-//        .pipe(mocha({reporter: 'spec'}));
-//});
-//
-//gulp.task('build', ['clean', 'inject', 'usemin', 'imagemin', 'copy']);
-//
-//gulp.task('default', ['build'], function() {
-//    // place code for your default task here
-//});
+
+gulp.task('clean', function() {
+  return gulp.src(paths.dist, {read: false})
+      .pipe(clean());
+});
+
+gulp.task('copy', function() {
+    // TODO
+});
+
+gulp.task('test', function() {
+    return gulp.src(paths.tests.mocha, {read: false})
+        .pipe(mocha({reporter: 'spec'}));
+});
+
+gulp.task('build', ['clean', 'inject', 'usemin', 'imagemin', 'copy']);
+
+gulp.task('default', ['build'], function() {
+    // place code for your default task here
+});
