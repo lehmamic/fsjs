@@ -8,8 +8,6 @@ var uglify = require('gulp-uglify');
 var minifyHtml = require('gulp-minify-html');
 var minifyCss = require('gulp-minify-css');
 var imagemin = require('gulp-imagemin');
-var pngquant = require('imagemin-pngquant');
-var rev = require('gulp-rev');
 var clean = require('gulp-clean');
 var debug = require('gulp-debug');
 var path = require('canonical-path');
@@ -43,15 +41,15 @@ gulp.task('inject', function () {
         .pipe(gulp.dest(paths.app.root));
 });
 
-//gulp.task('usemin', function() {
-//  return gulp.src(paths.html)
-//    .pipe(usemin({
-//      css: [minifyCss(), 'concat'],
-//      html: [minifyHtml({empty: true})],
-//      js: [uglify(), rev()]
-//    }))
-//    .pipe(gulp.dest(paths.dist));
-//});
+gulp.task('usemin', function() {
+  return gulp.src(paths.app.html)
+    .pipe(usemin({
+      css: [minifyCss(), 'concat'],
+      html: [minifyHtml({empty: true})],
+      js: [uglify()]
+    }))
+    .pipe(gulp.dest(paths.dist));
+});
 
 //gulp.task('imagemin', function() {
 //    return gulp.src(paths.images)
