@@ -16,29 +16,31 @@ var path = require('canonical-path');
 var mocha = require('gulp-mocha');
 
 var paths = {
-  index: './public/index.html',
-  html: './public/**/*.html',
-  scripts: './public/app/**/*.js',
-  styles: './public/assets/**/*.css',
-  images: '/public/images/**/*.{png,jpg,jpeg}',
-  bower: './bower.json',
-  nodetests: './test/unit/**/*.js',
-  app: './public',
-  dist: './dist'
+    app: {
+        root: './public',
+        index: './public/index.html',
+        html: './public/**/*.html',
+        scripts: './public/app/**/*.js',
+        styles: './public/assets/**/*.css',
+        images: '/public/images/**/*.{png,jpg,jpeg}'
+    },
+    dist: './dist',
+    bower: './bower.json',
+    nodetests: './test/unit/**/*.js'
 };
 
 gulp.task('inject', function () {
     var components = gulp.src(bowerFiles());
 
-	var scripts = gulp.src(paths.scripts)
+	var scripts = gulp.src(paths.app.scripts)
         .pipe(angularFilesort());
 
-    var styles = gulp.src(paths.styles);
+    var styles = gulp.src(paths.app.styles);
 
-    return gulp.src('./public/index.html')
+    return gulp.src(paths.app.index)
         .pipe(inject(es.merge(scripts, styles), {relative: true}))
         .pipe(inject(components, {name: 'bower', relative: true}))
-        .pipe(gulp.dest('./public'));
+        .pipe(gulp.dest(paths.app.root));
 });
 
 //gulp.task('usemin', function() {
